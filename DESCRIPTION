@@ -1,0 +1,19 @@
+Package: BasicPlots
+Title: Basic plots we use in our projects
+Version: 0.0.0.9000
+Authors@R: 
+    person("Lara", "Nonell", email = "lnonell@imim.cat", role = c("aut", "cre")))
+Description: Several auxiliar and basic plots
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+
+Imports:
+     RColorBrewer,
+     scatterplot3d,
+     Vennerable,
+     colorfulVennPlot,
+     openxlsx,
+     pheatmap,
+     gplots
