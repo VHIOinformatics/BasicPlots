@@ -17,7 +17,8 @@ makeHeatmap(
   annot = NA,
   annotColors = NA,
   showRowNames = TRUE,
-  fontSizeRows = 10
+  fontSizeRows = 10,
+  ...
 )
 }
 \arguments{
