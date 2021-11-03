@@ -5,7 +5,7 @@
 \title{Creates a pdf with different dendrograms (hierarchical clusters) combining a distance and a linkage method}
 \usage{
 manyClusters(
-  estimates = NULL,
+  estimates,
   resultsDir = NULL,
   fileName = NULL,
   fmtPlot = "pdf",
@@ -17,17 +17,17 @@ manyClusters(
 \arguments{
 \item{estimates:}{Numeric matrix with the intensity values to plot. The matrix should have samples as columns and genes/transcripts/exons as rows}
 
-\item{resultsDir:}{Output directory}
+\item{resultsDir:}{Output directory. Default = NULL}
 
-\item{fileName:}{name of the output file, without extension}
+\item{fileName:}{name of the output file, without extension. Default = NULL}
 
 \item{fmtPlot:}{Format for the image file, pdf" (default). If none specified images will be generated in R session}
 
-\item{title:}{Title for each plot}
+\item{title:}{Title for each plot. Default = NULL}
 
-\item{conditions:}{Vector with the different conditions}
+\item{conditions:}{Vector with the different conditions. Default = NULL}
 
-\item{colors:}{Vector with the colors assigned to each condition (in order of the unique(conditions)), default = NULL}
+\item{colors:}{Vector with the colors assigned to each condition (in order of the unique(conditions)). Default = NULL}
 }
 \value{
 a pdf with the hierarchical clusters

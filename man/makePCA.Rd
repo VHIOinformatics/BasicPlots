@@ -9,7 +9,7 @@ makePCA(
   resultsDir = NULL,
   fileName = NULL,
   fmtPlot = "pdf",
-  title,
+  title = NULL,
   conditions = NULL,
   colors = NULL,
   dist = 2,
@@ -20,21 +20,21 @@ makePCA(
 \arguments{
 \item{legend.pos}{position of the legend. Default "bottomright"}
 
-\item{estimates:}{Numeric matrix with the intensity values to plot}
+\item{estimates:}{Numeric matrix with the intensity values to plot.}
 
-\item{resultsDir:}{Output directory}
+\item{resultsDir:}{Output directory. Default = NULL}
 
-\item{fileName:}{name of the output file, without extension}
+\item{fileName:}{name of the output file, without extension. Default = NULL}
 
 \item{fmtPlot:}{Format for the image file, "png" or "pdf" (default). If none specified image will pop up in R session}
 
-\item{title:}{Title for each plot}
+\item{title:}{Title for each plot. Default = NULL}
 
-\item{conditions:}{Vector with the different conditions}
+\item{conditions:}{Vector with the different conditions. Default = NULL}
 
 \item{colors:}{Vector with the colors assigned to each condition (in order of the unique(conditions)). Default = NULL}
 
-\item{dim:}{Dimensions of the PCA plot. Default = 3. Possible values are 2 or 3}
+\item{dim:}{Dimensions of the PCA plot. Default = 3. Possible values are 2 or 3. Default = 3}
 
 \item{dist:}{Distance from labels to dots. Default = 2}
 }

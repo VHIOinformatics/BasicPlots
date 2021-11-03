@@ -17,13 +17,13 @@ makeVenn(
 \arguments{
 \item{listGenes:}{named list with gene vectors, with 2 to 4 elements. Names should be short strings of up to 10 characters}
 
-\item{resultsDir:}{Output directory}
+\item{resultsDir:}{Output directory. Default = NULL}
 
-\item{fileName:}{name of the output file, without extension}
+\item{fileName:}{name of the output file, without extension. Default = NULL}
 
 \item{fmtPlot:}{Format for the image file, "png" or "pdf" (default). If none specified image will pop up in R session}
 
-\item{title:}{Title for each plot}
+\item{title:}{Title for each plot. Default = NULL}
 
 \item{mkExcel:}{whether to generate an excel with gene intersection and specific sections. Default = TRUE}
 

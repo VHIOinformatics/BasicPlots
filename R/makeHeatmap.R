@@ -1,18 +1,18 @@
 #' Function to make heat map from a numeric matrix using pheatmap package
 
 #' @param matrix: Numeric matrix with the intensity values to plot, with row.names and col.names
-#' @param resultsDir: Output directory
-#' @param fileName: name of the output file, without extension
+#' @param resultsDir: Output directory. Default = NULL
+#' @param fileName: name of the output file, without extension. Default = NULL
 #' @param fmtPlot: Format for the image file, "png" or "pdf" (default). If none specified image will pop up in R session
-#' @param scaleColors: Vector with three colors to compose the color scale. Default is c("blue","white","red")
-#' @param title: Title for each plot
-#' @param clustMethod: Clustering method. Default "ward.D2". Values given by parameter clustering_method of pheatmap function
+#' @param scaleColors: Vector with three colors to compose the color scale. Default = c("blue","white","red")
+#' @param title: Title for each plot. Default = NULL
+#' @param clustMethod: Clustering method. Default "ward.D2". Values given by parameter clustering_method of pheatmap function. Default = "ward.D2"
 #' @param clustDistCols: Distance for clustering columns. Default "correlation". Values given by parameter clustering_distance_cols of pheatmap function
-#' @param scale: Character indicating if the values should be centered and scaled. Default = "row". Values given by parameter scale of pheatmap function
-#' @param annot: data.frame that specifies the annotations shown for columns. rownames of the data.frame must be the colnames of the matrix object
-#' @param annotColors: list with as many elements as conditions. Each element must be a vector with the color assignment for each category of the condition. Default is NA (assigned internally)
-#' @param showRownames: Indicates whether you want to show rownames or not. Each row defines the features for a specific row. Default is TRUE
-#' @param fontSizeRows: Size of row labels. Computed depending on the number of rows of matrix. Default is 10
+#' @param scale: Character indicating if the values should be centered and scaled. Values given by parameter scale of pheatmap function. efault = "row"
+#' @param annot: data.frame that specifies the annotations shown for columns. rownames of the data.frame must be the colnames of the matrix object. Default = NA
+#' @param annotColors: list with as many elements as conditions. Each element must be a vector with the color assignment for each category of the condition. Default = NA (assigned internally)
+#' @param showRownames: Indicates whether you want to show rownames or not. Each row defines the features for a specific row. Default = TRUE
+#' @param fontSizeRows: Size of row labels. Computed depending on the number of rows of matrix. Default = 10
 
 #' @return The plot is created in the "resultsDir" with the name "fileName"
 
