@@ -28,6 +28,8 @@ makeHeatmap <- function(matrix, resultsDir = NULL, fileName = NULL, fmtPlot = "p
 
   heatcol<-colorRampPalette(scaleColors, space = "rgb")
 
+  if(is.null(title)) title = ""
+
   genes.l <-nrow(matrix)
 
   if (showRowNames & fontSizeRows==10){
@@ -62,7 +64,7 @@ makeHeatmap <- function(matrix, resultsDir = NULL, fileName = NULL, fmtPlot = "p
          scale = scale, cluster_row = T, cluster_cols = T,
          clustering_method = clustMethod, clustering_distance_cols = clustDistCols,
          show_rownames = showRowNames, treeheight_row = 0,  fontsize_row = fontSizeRows,
-         annotation_col = annot, annotation_colors = annotColors)
+         annotation_col = annot, annotation_colors = annotColors, ...)
 
   if (fmtPlot %in% c("pdf", "png")) dev.off()
 
