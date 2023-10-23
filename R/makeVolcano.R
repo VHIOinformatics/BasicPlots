@@ -19,7 +19,7 @@
 #' @export
 
 #' @import ggplot2
-#' @import ggreppel
+#' @import ggrepel
 
 makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtPlot = "", title = NULL, scaleColors = c("blue", "grey", "red"), yVal="p.adjust", p.val = NULL, p.adj = 0.05, thres.logFC=1, coefs=fit.main$coefficients ,topGenes = 20, geneLabel = "Geneid", ...)
 {
