@@ -1,13 +1,13 @@
 #' Creates a pdf with different dendrograms (hierarchical clusters) combining a distance and a linkage method
 #'
-#' @param estimates: Numeric matrix with the intensity values to plot
-#' @param resultsDir: Output directory. Default = NULL
-#' @param fileName: name of the output file, without extension. Default = NULL
-#' @param fmtPlot: Format for the image file, pdf" (default). If none specified images will be generated in R session
-#' @param title: Title for each plot. Default = NULL
-#' @param method: linkage method to cluster samples. Values given by parameter method of hclust function. Default = "ward.D2"
-#' @param conditions: Vector with the different conditions. Default = NULL
-#' @param colors: Vector with the colors assigned to each condition (in order of the unique(conditions)). Default = NULL
+#' @param estimates Numeric matrix with the intensity values to plot
+#' @param resultsDir Output directory. Default = NULL
+#' @param fileName name of the output file, without extension. Default = NULL
+#' @param fmtPlot Format for the image file, pdf or png. If none specified images will be generated in R session. Default = "pdf"
+#' @param title Title for each plot. Default = NULL
+#' @param method linkage method to cluster samples. Values given by parameter method of hclust function. Default = "ward.D2"
+#' @param conditions Vector with the different conditions. Default = NULL
+#' @param colors Vector with the colors assigned to each condition (in order of the unique(conditions)). Default = NULL
 #'
 #' @import RColorBrewer
 #' @return a pdf and/or png with the hierarchical cluster
@@ -56,7 +56,7 @@ oneCluster <-function(estimates, resultsDir = NULL, fileName = NULL, fmtPlot = "
 
       } else {
 
-        list1 <- unique(as.character(conditions))
+        list1 <- unique(as.character(sort(conditions)))
         list2 <- unique(colors)
         map = setNames(list2, list1)
         colors <- map[conditions]
