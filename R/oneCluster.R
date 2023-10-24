@@ -5,7 +5,8 @@
 #' @param fileName name of the output file, without extension. Default = NULL
 #' @param fmtPlot Format for the image file, pdf or png. If none specified images will be generated in R session. Default = "pdf"
 #' @param title Title for each plot. Default = NULL
-#' @param method linkage method to cluster samples. Values given by parameter method of hclust function. Default = "ward.D2"
+#' @param distance Distance measure for the hierchical clustering. Either correlation or euclidean. Default = "correlation"
+#' @param method Linkage method to cluster samples. Values given by parameter method of hclust function. Default = "ward.D2"
 #' @param conditions Vector with the different conditions. Default = NULL
 #' @param colors Vector with the colors assigned to each condition (in order of the unique(conditions)). Default = NULL
 #'
@@ -13,8 +14,7 @@
 #' @return a pdf and/or png with the hierarchical cluster
 #' @export oneCluster
 
-oneCluster <-function(estimates, resultsDir = NULL, fileName = NULL, fmtPlot = "pdf",
-                      title = NULL, method = "ward.D2", conditions = NULL, colors = NULL)
+oneCluster <-function(estimates, resultsDir = NULL, fileName = NULL, fmtPlot = "pdf", title = NULL, distance="correlation", method = "ward.D2", conditions = NULL, colors = NULL)
 {
 
     labels <- colnames(estimates)
@@ -22,8 +22,15 @@ oneCluster <-function(estimates, resultsDir = NULL, fileName = NULL, fmtPlot = "
 
     use.cor = "pairwise.complete.obs"
 
-    clust.cor.ward <- hclust(as.dist(1-cor(estimates,use=use.cor)), method = method)
-    xlab <- paste("Correlation", method, sep = "-")
+    if (distance == "correlation") {
+      clust <- hclust(as.dist(1-cor(estimates,use=use.cor)), method = method)
+      xlab <- paste("Correlation", method, sep = "-")
+
+    } else if(distance == "euclidean") {
+      clust <- hclust(dist(t(estimates)), method = method)
+      xlab <- paste("Euclidean", method, sep="-")
+    }
+
 
     #plots
     if (fmtPlot == "pdf") {
@@ -40,7 +47,7 @@ oneCluster <-function(estimates, resultsDir = NULL, fileName = NULL, fmtPlot = "
     if (is.null(conditions)) {
 
         opt<-par(cex.main=1, cex = parameters$ce, cex.axis = parameters$ce)
-          plot(clust.cor.ward, main=title, hang=-1, xlab=xlab, ylab="", sub = "")
+          plot(clust, main=title, hang=-1, xlab=xlab, ylab="", sub = "")
         par(opt)
 
     } else {
@@ -64,13 +71,13 @@ oneCluster <-function(estimates, resultsDir = NULL, fileName = NULL, fmtPlot = "
       }
 
       opt<-par(cex.main=1,cex.axis=0.8, cex=0.8)
-      clust.cor.ward <- colorCluster(clust.cor.ward, colors, parameters$ce)
-      plot(clust.cor.ward, main=title, xlab=xlab)
+      clust <- colorCluster(clust, colors, parameters$ce)
+      plot(clust, main=title, xlab=xlab)
       legend("topright",legend=list1, cex=parameters$ce+0.2,fill=list2)
 
     }
 
     if (fmtPlot %in% c("pdf", "png")) dev.off()
 
-    return(clust.cor.ward)
+    return(clust)
 }

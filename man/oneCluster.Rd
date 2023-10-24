@@ -10,6 +10,7 @@ oneCluster(
   fileName = NULL,
   fmtPlot = "pdf",
   title = NULL,
+  distance = "correlation",
   method = "ward.D2",
   conditions = NULL,
   colors = NULL
@@ -26,7 +27,9 @@ oneCluster(
 
 \item{title}{Title for each plot. Default = NULL}
 
-\item{method}{linkage method to cluster samples. Values given by parameter method of hclust function. Default = "ward.D2"}
+\item{distance}{Distance measure for the hierchical clustering. Either correlation or euclidean. Default = "correlation"}
+
+\item{method}{Linkage method to cluster samples. Values given by parameter method of hclust function. Default = "ward.D2"}
 
 \item{conditions}{Vector with the different conditions. Default = NULL}
 
