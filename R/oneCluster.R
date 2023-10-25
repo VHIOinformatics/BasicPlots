@@ -27,7 +27,7 @@ oneCluster <-function(estimates, resultsDir = NULL, fileName = NULL, fmtPlot = "
       xlab <- paste("Correlation", method, sep = "-")
 
     } else if(distance == "euclidean") {
-      clust <- hclust(dist(estimates), method = method)
+      clust <- hclust(dist(t(estimates)), method = method)
       xlab <- paste("Euclidean", method, sep="-")
     }
 
