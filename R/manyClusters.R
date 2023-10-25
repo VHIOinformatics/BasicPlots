@@ -1,18 +1,18 @@
 #' Creates a pdf with different dendrograms (hierarchical clusters) combining a distance and a linkage method
 #'
-#' @param estimates: Numeric matrix with the intensity values to plot. The matrix should have samples as columns and genes/transcripts/exons as rows
-#' @param resultsDir: Output directory. Default = NULL
-#' @param fileName: name of the output file, without extension. Default = NULL
-#' @param fmtPlot: Format for the image file, pdf" (default). If none specified images will be generated in R session
-#' @param title: Title for each plot. Default = NULL
-#' @param conditions: Vector with the different conditions. Default = NULL
-#' @param colors: Vector with the colors assigned to each condition (in order of the unique(conditions)). Default = NULL
+#' @param estimates Numeric matrix with the intensity values to plot. The matrix should have samples as columns and genes/transcripts/exons as rows
+#' @param resultsDir Output directory. Default = NULL
+#' @param fileName name of the output file, without extension. Default = "manyClusters"
+#' @param fmtPlot Format for the image file. If none specified images will be generated in R session. Default = "pdf"
+#' @param title Title for each plot. Default = NULL
+#' @param conditions Vector with the different conditions. Default = NULL
+#' @param colors Vector with the colors assigned to each condition. Default = NULL
 #'
 #' @import RColorBrewer
 #' @return a pdf with the hierarchical clusters
 #' @export manyClusters
 
-manyClusters <-function(estimates, resultsDir = NULL, fileName = NULL, fmtPlot = "pdf",
+manyClusters <-function(estimates, resultsDir = NULL, fileName = "manyClusters", fmtPlot = "pdf",
                         title = NULL, conditions = NULL, colors = NULL)
 {
 
@@ -56,7 +56,7 @@ manyClusters <-function(estimates, resultsDir = NULL, fileName = NULL, fmtPlot =
 
       } else {
 
-        list1 <- unique(as.character(conditions))
+        list1 <- unique(as.character(sort(conditions)))
         list2 <- unique(colors)
         map = setNames(list2, list1)
         colors <- map[conditions]

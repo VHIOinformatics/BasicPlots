@@ -7,7 +7,7 @@
 manyClusters(
   estimates,
   resultsDir = NULL,
-  fileName = NULL,
+  fileName = "manyClusters",
   fmtPlot = "pdf",
   title = NULL,
   conditions = NULL,
@@ -15,19 +15,19 @@ manyClusters(
 )
 }
 \arguments{
-\item{estimates:}{Numeric matrix with the intensity values to plot. The matrix should have samples as columns and genes/transcripts/exons as rows}
+\item{estimates}{Numeric matrix with the intensity values to plot. The matrix should have samples as columns and genes/transcripts/exons as rows}
 
-\item{resultsDir:}{Output directory. Default = NULL}
+\item{resultsDir}{Output directory. Default = NULL}
 
-\item{fileName:}{name of the output file, without extension. Default = NULL}
+\item{fileName}{name of the output file, without extension. Default = "manyClusters"}
 
-\item{fmtPlot:}{Format for the image file, pdf" (default). If none specified images will be generated in R session}
+\item{fmtPlot}{Format for the image file. If none specified images will be generated in R session. Default = "pdf"}
 
-\item{title:}{Title for each plot. Default = NULL}
+\item{title}{Title for each plot. Default = NULL}
 
-\item{conditions:}{Vector with the different conditions. Default = NULL}
+\item{conditions}{Vector with the different conditions. Default = NULL}
 
-\item{colors:}{Vector with the colors assigned to each condition (in order of the unique(conditions)). Default = NULL}
+\item{colors}{Vector with the colors assigned to each condition. Default = NULL}
 }
 \value{
 a pdf with the hierarchical clusters
