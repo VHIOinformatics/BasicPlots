@@ -7,11 +7,11 @@
 colorCluster(hclus, condition, ce)
 }
 \arguments{
-\item{hclus:}{an hclust object obtained with the hclust function}
+\item{hclus}{an hclust object obtained with the hclust function}
 
-\item{condition:}{a numeric vector of the length=numb of samples, each number is a condition(ex: condition=c(1,1,1,1,2,2,2,2))}
+\item{condition}{a numeric vector of the length=numb of samples, each number is a condition(ex: condition=c(1,1,1,1,2,2,2,2))}
 
-\item{Ce:}{cex parameter that is set in function of the length of the characters of the vector}
+\item{ce}{cex parameter that is set in function of the length of the characters of the vector}
 }
 \value{
 returns the cluster with colored leafs
