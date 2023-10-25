@@ -1,17 +1,18 @@
 #' Estimates the parameters for the different graphics
-#' 
-#' @param labels: Vector with the sample names
+#'
+#' @param labels Vector with the sample names
 #' @return a list of the parameters needed to perform graphics
+#' @export
 
-setParameters <- function (labels) 
+setParameters <- function (labels)
 {
-    
+
     long <- length(labels)
-    
+
     wid <- 3500
     hei <- 3500
     res <- 400
-    
+
     if (max(nchar(labels)) < 10) {
         ce <- 0.8
     }else if (max(nchar(labels)) < 15){

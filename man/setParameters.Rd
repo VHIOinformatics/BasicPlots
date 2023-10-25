@@ -7,7 +7,7 @@
 setParameters(labels)
 }
 \arguments{
-\item{labels:}{Vector with the sample names}
+\item{labels}{Vector with the sample names}
 }
 \value{
 a list of the parameters needed to perform graphics
