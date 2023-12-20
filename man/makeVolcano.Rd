@@ -18,12 +18,11 @@ makeVolcano(
   coefs = fit.main$coefficients,
   topGenes = 20,
   geneLabel = "Geneid",
+  annotFile = NULL,
   ...
 )
 }
 \arguments{
-\item{topTable}{data.frame as the output obtained through function topTable() in limma package}
-
 \item{resultsDir}{Output directory. Default = volcanoDir}
 
 \item{fileName}{Name of the output file, without extension. Default = NULL}
@@ -47,6 +46,10 @@ makeVolcano(
 \item{topGenes}{Number of genes to label. Default = 20}
 
 \item{geneLabel}{Variable with the label of genes to be shown in plot. Default = Geneid}
+
+\item{annotFile}{Dataframe that includes the equivalence of Geneid and geneLabel, if geneLabel is specified. Default = NULL}
+
+\item{dataV}{data.frame as the output obtained through function topTable() in limma package}
 }
 \value{
 The plot is created in the "resultsDir" with the name "fileName" or in session if the format is not specified.
