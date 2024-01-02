@@ -89,7 +89,7 @@ makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtP
   }
 
   if(fmtPlot != "") {
-    ggsave(p, filename= file.path(resultsDir, paste(fileName, fmtPlot, sep = ".")), device = fmtPlot)
+    ggsave(p, filename= file.path(resultsDir, paste(fileName, fmtPlot, sep = ".")), device = fmtPlot, ...)
   } else {
     print(p)
   }
