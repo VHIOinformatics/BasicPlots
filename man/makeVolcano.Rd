@@ -17,6 +17,7 @@ makeVolcano(
   thres.logFC = 1,
   coefs = fit.main$coefficients,
   topGenes = 20,
+  maxOverlaps = 25,
   geneLabel = "Geneid",
   annotFile = NULL,
   ...

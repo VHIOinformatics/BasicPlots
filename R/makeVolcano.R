@@ -22,7 +22,7 @@
 #' @import ggplot2
 #' @import ggrepel
 
-makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtPlot = "", title = NULL, scaleColors = c("blue", "grey", "red"), yVal="p.adjust", p.val = NULL, p.adj = 0.05, thres.logFC=1, coefs=fit.main$coefficients ,topGenes = 20, geneLabel = "Geneid", annotFile = NULL, ...)
+makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtPlot = "", title = NULL, scaleColors = c("blue", "grey", "red"), yVal="p.adjust", p.val = NULL, p.adj = 0.05, thres.logFC=1, coefs=fit.main$coefficients ,topGenes = 20, maxOverlaps = 25, geneLabel = "Geneid", annotFile = NULL, ...)
 {
 
   colorS <- scaleColors
@@ -70,7 +70,7 @@ makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtP
   }
 
   if (geneLabel == "Geneid") { # if Geneid all ok, as it's the default coded variable
-    p <- p + geom_text_repel(data = head(dataV[dataV$sig != "n.s",],topGenes), aes(label = Geneid), max.overlaps = topGenes)
+    p <- p + geom_text_repel(data = head(dataV[dataV$sig != "n.s",],topGenes), aes(label = Geneid), max.overlaps = maxOverlaps)
   } else { # if not, will need to map it to dataV and sort again the dataframe
     if (!is.null(annotFile)) {
       dataV <- merge(annotFile[,c("Geneid",geneLabel)],dataV,by="Geneid")
@@ -84,7 +84,7 @@ makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtP
     }
 
     topData = head(dataV[dataV$sig != "n.s",],topGenes)
-    p <- p + geom_text_repel(data = head(dataV[dataV$sig != "n.s",],topGenes), aes(label = topData[,c(geneLabel)]), max.overlaps = topGenes)
+    p <- p + geom_text_repel(data = head(dataV[dataV$sig != "n.s",],topGenes), aes(label = topData[,c(geneLabel)]), max.overlaps = maxOverlaps)
 
   }
 
