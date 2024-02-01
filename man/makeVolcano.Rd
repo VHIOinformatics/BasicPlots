@@ -19,6 +19,7 @@ makeVolcano(
   topGenes = 20,
   maxOverlaps = 25,
   geneLabel = "Geneid",
+  sortLabel = "p-value",
   annotFile = NULL,
   ...
 )
@@ -47,6 +48,8 @@ makeVolcano(
 \item{topGenes}{Number of genes to label. Default = 20}
 
 \item{geneLabel}{Variable with the label of genes to be shown in plot. Default = Geneid}
+
+\item{sortLabel}{Sorting criteria for the label highlight, either "p-value" or "logFC". Will show in plot the labels of the top most significant or most different in absolute fold change, respectively. Default = p-value}
 
 \item{annotFile}{Dataframe that includes the equivalence of Geneid and geneLabel, if geneLabel is specified. Default = NULL}
 

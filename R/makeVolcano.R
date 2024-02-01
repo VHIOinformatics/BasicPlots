@@ -13,6 +13,7 @@
 #' @param coefs Coefficients of fit.main results. Will be used for the limits of x in the volcano plot. Default = fit.main$coefficients
 #' @param topGenes Number of genes to label. Default = 20
 #' @param geneLabel Variable with the label of genes to be shown in plot. Default = Geneid
+#' @param sortLabel Sorting criteria for the label highlight, either "p-value" or "logFC". Will show in plot the labels of the top most significant or most different in absolute fold change, respectively. Default = p-value
 #' @param annotFile Dataframe that includes the equivalence of Geneid and geneLabel, if geneLabel is specified. Default = NULL
 #'
 #' @return The plot is created in the "resultsDir" with the name "fileName" or in session if the format is not specified.
@@ -22,7 +23,7 @@
 #' @import ggplot2
 #' @import ggrepel
 
-makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtPlot = "", title = NULL, scaleColors = c("blue", "grey", "red"), yVal="p.adjust", p.val = NULL, p.adj = 0.05, thres.logFC=1, coefs=fit.main$coefficients ,topGenes = 20, maxOverlaps = 25, geneLabel = "Geneid", annotFile = NULL, ...)
+makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtPlot = "", title = NULL, scaleColors = c("blue", "grey", "red"), yVal="p.adjust", p.val = NULL, p.adj = 0.05, thres.logFC=1, coefs=fit.main$coefficients ,topGenes = 20, maxOverlaps = 25, geneLabel = "Geneid", sortLabel="p-value", annotFile = NULL, ...)
 {
 
   colorS <- scaleColors
@@ -39,13 +40,24 @@ makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtP
     dataV <- dataV %>%
     mutate(sig = ifelse(adj.P.Val<p.adj & logFC > thres.logFC, "UP", ifelse(adj.P.Val<p.adj & logFC < (-thres.logFC), "DN","n.s")))
 
-    dataV <- dataV[order(dataV$adj.P.Val),] # order sorted by p.adj
+    if (sortLabel == "logFC") {
+      dataV$abslogFC <- abs(dataV$logFC)
+      dataV <- dataV[order(dataV$abslogFC, decreasing = TRUE),] # order sorted by logFC
+    } else {
+      dataV <- dataV[order(dataV$adj.P.Val),] # order sorted by p.adj
+    }
 
   } else { # if p.value is not null, we use p.value as threshold
     dataV <- dataV %>%
       mutate(sig = ifelse(P.Value<p.val & logFC > thres.logFC, "UP", ifelse(P.Value<p.val & logFC < (-thres.logFC), "DN","n.s")))
 
-    dataV <- dataV[order(dataV$P.Value),] # order sorted by p.val
+
+    if (sortLabel == "logFC") {
+      dataV$abslogFC <- abs(dataV$logFC)
+      dataV <- dataV[order(dataV$abslogFC, decreasing = TRUE),] # sort by logFC
+    } else {
+      dataV <- dataV[order(dataV$pval),] # order sorted by p.val
+    }
   }
 
 
@@ -75,16 +87,25 @@ makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtP
     if (!is.null(annotFile)) {
       dataV <- merge(annotFile[,c("Geneid",geneLabel)],dataV,by="Geneid")
       if (is.null(p.val)) {
-        dataV <- dataV[order(dataV$adj.P.Val),]
-      } else {
-        dataV <- dataV[order(dataV$P.Value),]
+        if (sortLabel == "logFC") {
+          dataV <- dataV[order(dataV$abslogFC, decreasing = TRUE),]
+        } else { # per pvalue, default
+          dataV <- dataV[order(dataV$adj.P.Val),]
+        }
+
+      } else { # pvalue instead of padj
+        if (sortLabel == "logFC") {
+          dataV <- dataV[order(dataV$abslogFC, decreasing = TRUE),]
+        } else { # per pvalue, default
+          dataV <- dataV[order(dataV$P.Value),]
+        }
       }
     } else {
       stop("Please, provide an annotation file with the specified 'geneLabel' and Geneid, using 'annotFile' parameter.\n")
     }
 
     topData = head(dataV[dataV$sig != "n.s",],topGenes)
-    p <- p + geom_text_repel(data = head(dataV[dataV$sig != "n.s",],topGenes), aes(label = topData[,c(geneLabel)]), max.overlaps = maxOverlaps)
+    p <- p + geom_text_repel(data = topData, aes(label = topData[,c(geneLabel)]), max.overlaps = maxOverlaps)
 
   }
 
