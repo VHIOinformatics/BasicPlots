@@ -71,6 +71,7 @@ makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtP
       xlab(expression("log"[2]*"FC")) + ylab(expression("-log"[10]*"(adj.pval)")) + labs(col=" ") +
       geom_vline(xintercept = thres.logFC, linetype= "dotted") + geom_vline(xintercept = -thres.logFC, linetype= "dotted") +
       geom_hline(yintercept = -log10(p.adj), linetype= "dotted")  +  theme_bw() + ggtitle(title)
+    intp <- ggplotly(p, tooltip = "text")
 
   } else {
     ylim <- ylim(0,ceiling(max(dataV$minlogp)))
@@ -80,6 +81,7 @@ makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtP
       xlab(expression("log"[2]*"FC")) + ylab(expression("-log"[10]*"(p.val)")) + labs(col=" ") +
       geom_vline(xintercept = thres.logFC, linetype= "dotted") + geom_vline(xintercept = -thres.logFC, linetype= "dotted") +
       geom_hline(yintercept = -log10(p.val), linetype= "dotted")  +  theme_bw() + ggtitle(title)
+    intp <- ggplotly(p, tooltip = "text")
 
   }
 
