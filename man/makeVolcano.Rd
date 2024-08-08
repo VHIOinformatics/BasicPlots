@@ -21,6 +21,7 @@ makeVolcano(
   geneLabel = "Geneid",
   sortLabel = "p-value",
   annotFile = NULL,
+  interactive = FALSE,
   ...
 )
 }
@@ -52,6 +53,8 @@ makeVolcano(
 \item{sortLabel}{Sorting criteria for the label highlight, either "p-value" or "logFC". Will show in plot the labels of the top most significant or most different in absolute fold change, respectively. Default = p-value}
 
 \item{annotFile}{Dataframe that includes the equivalence of Geneid and geneLabel, if geneLabel is specified. Default = NULL}
+
+\item{interactive}{Prints an interactive plot showing the gene ids when hovering the points. Currently only working when geneLabel is "Geneid" and in session (fmtPlot = "")}
 
 \item{dataV}{data.frame as the output obtained through function topTable() in limma package}
 }

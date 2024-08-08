@@ -15,6 +15,7 @@
 #' @param geneLabel Variable with the label of genes to be shown in plot. Default = Geneid
 #' @param sortLabel Sorting criteria for the label highlight, either "p-value" or "logFC". Will show in plot the labels of the top most significant or most different in absolute fold change, respectively. Default = p-value
 #' @param annotFile Dataframe that includes the equivalence of Geneid and geneLabel, if geneLabel is specified. Default = NULL
+#' @param interactive Prints an interactive plot showing the gene ids when hovering the points. Currently only working when geneLabel is "Geneid" and in session (fmtPlot = "")
 #'
 #' @return The plot is created in the "resultsDir" with the name "fileName" or in session if the format is not specified.
 
@@ -22,8 +23,9 @@
 
 #' @import ggplot2
 #' @import ggrepel
+#' @import plotly
 
-makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtPlot = "", title = NULL, scaleColors = c("blue", "grey", "red"), yVal="p.adjust", p.val = NULL, p.adj = 0.05, thres.logFC=1, coefs=fit.main$coefficients ,topGenes = 20, maxOverlaps = 25, geneLabel = "Geneid", sortLabel="p-value", annotFile = NULL, ...)
+makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtPlot = "", title = NULL, scaleColors = c("blue", "grey", "red"), yVal="p.adjust", p.val = NULL, p.adj = 0.05, thres.logFC=1, coefs=fit.main$coefficients ,topGenes = 20, maxOverlaps = 25, geneLabel = "Geneid", sortLabel="p-value", annotFile = NULL, interactive = FALSE, ...)
 {
 
   colorS <- scaleColors
@@ -64,7 +66,7 @@ makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtP
   if(yVal == "p.adjust") {
     ylim <- ylim(0,ceiling(max(dataV$minlogadjp)))
     p <- ggplot(data=dataV, aes(x=logFC, y=minlogadjp )) +
-      geom_point(alpha = 1, size= 1, aes(col = sig)) +
+      geom_point(alpha = 1, size= 1, aes(col = sig, text=Geneid)) +
       scale_color_manual(values = colorS) + xlim + ylim +
       xlab(expression("log"[2]*"FC")) + ylab(expression("-log"[10]*"(adj.pval)")) + labs(col=" ") +
       geom_vline(xintercept = thres.logFC, linetype= "dotted") + geom_vline(xintercept = -thres.logFC, linetype= "dotted") +
@@ -73,7 +75,7 @@ makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtP
   } else {
     ylim <- ylim(0,ceiling(max(dataV$minlogp)))
     p <- ggplot(data=dataV, aes(x=logFC, y=minlogp )) +
-      geom_point(alpha = 1, size= 1, aes(col = sig)) +
+      geom_point(alpha = 1, size= 1, aes(col = sig, text=Geneid)) +
       scale_color_manual(values = colorS) + xlim + ylim +
       xlab(expression("log"[2]*"FC")) + ylab(expression("-log"[10]*"(p.val)")) + labs(col=" ") +
       geom_vline(xintercept = thres.logFC, linetype= "dotted") + geom_vline(xintercept = -thres.logFC, linetype= "dotted") +
@@ -112,7 +114,11 @@ makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtP
   if(fmtPlot != "") {
     ggsave(p, filename= file.path(resultsDir, paste(fileName, fmtPlot, sep = ".")), device = fmtPlot, ...)
   } else {
-    print(p)
+    if(interactive == TRUE) {
+      print(intp)
+    } else {
+      print(p)
+    }
   }
 
 
