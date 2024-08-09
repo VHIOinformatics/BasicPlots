@@ -1,55 +1,51 @@
 #' Creates a Venn diagram based on several gene lists
 #'
-#' @param listGenes: named list with gene vectors, with 2 to 4 elements. Names should be short strings of up to 10 characters
-#' @param resultsDir: Output directory. Default = NULL
-#' @param fileName: name of the output file, without extension. Default = NULL
-#' @param fmtPlot: Format for the image file, "png" or "pdf" (default). If none specified image will pop up in R session
-#' @param title: Title for each plot. Default = NULL
-#' @param mkExcel: whether to generate an excel with gene intersection and specific sections. Default = TRUE
-#' @param colors: vector of colors to paint the different sections of the Venn diagram
+#' @param listGenes Named list with gene vectors, with 2 to 4 elements. Names should be short strings of up to 10 characters
+#' @param resultsDir Output directory. Default = NULL
+#' @param fileName Name of the output file, without extension. Default = NULL
+#' @param fmtPlot Format for the image file, "png" or "pdf". If none specified image will pop up in R session. Default = ""
+#' @param title Title for each plot. Default = NULL
+#' @param mkExcel Whether to generate an excel with gene intersection and specific sections. Default = TRUE
+#' @param colors Vector of colors to paint the different main conditions of the Venn diagram. Intersecting sections will be colored with color overlap. If none specified, pre-defined default colors will be used.
+#' @param percentage Whether to show the percentage of genes for each set. Default = FALSE
 #'
 #' @import Vennerable
-#' @import colorfulVennPlot
+#' @import ggplot2
+#' @import ggvenn
 #' @import openxlsx
-#' @import RColorBrewer
-#' @return a file
+
+#' @return Venn diagram plot and list of genes in each set (in excel format) if specified
 #' @export makeVenn
 
-makeVenn <-  function (listGenes, resultsDir = NULL, fileName = NULL, fmtPlot = "pdf",
-                       title = NULL, mkExcel = TRUE, colors)
+makeVenn <-  function (listGenes, resultsDir = NULL, fileName = NULL, fmtPlot = "",
+                       title = NULL, mkExcel = TRUE, colors = NULL, percentage = FALSE)
 {
 
-  colors <- c(brewer.pal(12, "Set3"), brewer.pal(4, "Pastel2"))
+  if (is.null(colors)) { #default colors
+    colors=c("#c33c54","#254e70","#43aa8b","#ffc857")
+  }
+
   nList <- length(listGenes)
   vtest <- Venn(listGenes)
   vennData <- sapply(vtest@IntersectionSets, function(x) length(unlist(x)))
 
   # plot and save file
-  if (fmtPlot == "png") {
+  venn_plot <- ggvenn(
+    data = listGenes,
+    show_elements = FALSE,    # Optional: Set to TRUE if you want to display the elements
+    fill_color = colors,  # Custom colors if desired
+    stroke_size = 0.5,
+    set_name_size = 6,
+    text_size = 5,
+    show_percentage = percentage   # Optional: Set to TRUE to show percentages in intersections
+  )
 
-    png(file.path(resultsDir, paste("VennDiagram", fileName, "png", sep = ".")))
-
-  } else if (fmtPlot == "pdf") {
-
-    pdf(file.path(resultsDir, paste("VennDiagram", fileName, "pdf", sep = ".")))
-
+  if (fmtPlot %in% c("png", "pdf")) {
+    ggsave(venn_plot, filename= file.path(resultsDir, paste("VennDiagram",fileName, fmtPlot, sep = ".")), device = fmtPlot, bg="white", width=8, height=8, units="in")
+  } else {
+    print(venn_plot)
   }
 
-  if (nList==2){
-
-  plotVenn2d(vennData, rev(names(listGenes)), Colors = colors, Title = title, shrink = 1)
-
-  } else if (nList==3){
-
-    plotVenn3d(vennData, names(listGenes), Colors = colors, Title = title, shrink = 1)
-
-  } else if (nList==4){
-
-    plotVenn4d(vennData[-1], names(listGenes), Colors = colors, Title = title, shrink = 1) #notice we need to remove first element in this case
-
-  }
-
-  if (fmtPlot %in% c("pdf", "png")) dev.off()
 
 if (mkExcel) {
     hs1 <- createStyle(fgFill = "#737373", halign = "CENTER", textDecoration = "Bold",

@@ -8,29 +8,32 @@ makeVenn(
   listGenes,
   resultsDir = NULL,
   fileName = NULL,
-  fmtPlot = "pdf",
+  fmtPlot = "",
   title = NULL,
   mkExcel = TRUE,
-  colors
+  colors = NULL,
+  percentage = FALSE
 )
 }
 \arguments{
-\item{listGenes:}{named list with gene vectors, with 2 to 4 elements. Names should be short strings of up to 10 characters}
+\item{listGenes}{Named list with gene vectors, with 2 to 4 elements. Names should be short strings of up to 10 characters}
 
-\item{resultsDir:}{Output directory. Default = NULL}
+\item{resultsDir}{Output directory. Default = NULL}
 
-\item{fileName:}{name of the output file, without extension. Default = NULL}
+\item{fileName}{Name of the output file, without extension. Default = NULL}
 
-\item{fmtPlot:}{Format for the image file, "png" or "pdf" (default). If none specified image will pop up in R session}
+\item{fmtPlot}{Format for the image file, "png" or "pdf". If none specified image will pop up in R session. Default = ""}
 
-\item{title:}{Title for each plot. Default = NULL}
+\item{title}{Title for each plot. Default = NULL}
 
-\item{mkExcel:}{whether to generate an excel with gene intersection and specific sections. Default = TRUE}
+\item{mkExcel}{Whether to generate an excel with gene intersection and specific sections. Default = TRUE}
 
-\item{colors:}{vector of colors to paint the different sections of the Venn diagram}
+\item{colors}{Vector of colors to paint the different main conditions of the Venn diagram. Intersecting sections will be colored with color overlap. If none specified, pre-defined default colors will be used.}
+
+\item{percentage}{Whether to show the percentage of genes for each set. Default = FALSE}
 }
 \value{
-a file
+Venn diagram plot and list of genes in each set (in excel format) if specified
 }
 \description{
 Creates a Venn diagram based on several gene lists
