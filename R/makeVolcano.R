@@ -15,7 +15,7 @@
 #' @param geneLabel Variable with the label of genes to be shown in plot. Default = Geneid
 #' @param sortLabel Sorting criteria for the label highlight, either "p-value" or "logFC". Will show in plot the labels of the top most significant or most different in absolute fold change, respectively. Default = p-value
 #' @param annotFile Dataframe that includes the equivalence of Geneid and geneLabel, if geneLabel is specified. Default = NULL
-#' @param interactive Prints an interactive plot showing the gene ids when hovering the points. Currently only working when geneLabel is "Geneid" and in session (fmtPlot = "")
+#' @param interactive Prints an interactive plot showing the geneLabel, FC and (adj)p.value when hovering the points. Currently only working in session (fmtPlot = ""). Default = FALSE
 #'
 #' @return The plot is created in the "resultsDir" with the name "fileName" or in session if the format is not specified.
 
@@ -62,32 +62,7 @@ makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtP
     }
   }
 
-
-  if(yVal == "p.adjust") {
-    ylim <- ylim(0,ceiling(max(dataV$minlogadjp)))
-    p <- ggplot(data=dataV, aes(x=logFC, y=minlogadjp )) +
-      geom_point(alpha = 1, size= 1, aes(col = sig, text=Geneid)) +
-      scale_color_manual(values = colorS) + xlim + ylim +
-      xlab(expression("log"[2]*"FC")) + ylab(expression("-log"[10]*"(adj.pval)")) + labs(col=" ") +
-      geom_vline(xintercept = thres.logFC, linetype= "dotted") + geom_vline(xintercept = -thres.logFC, linetype= "dotted") +
-      geom_hline(yintercept = -log10(p.adj), linetype= "dotted")  +  theme_bw() + ggtitle(title)
-    intp <- ggplotly(p, tooltip = "text")
-
-  } else {
-    ylim <- ylim(0,ceiling(max(dataV$minlogp)))
-    p <- ggplot(data=dataV, aes(x=logFC, y=minlogp )) +
-      geom_point(alpha = 1, size= 1, aes(col = sig, text=Geneid)) +
-      scale_color_manual(values = colorS) + xlim + ylim +
-      xlab(expression("log"[2]*"FC")) + ylab(expression("-log"[10]*"(p.val)")) + labs(col=" ") +
-      geom_vline(xintercept = thres.logFC, linetype= "dotted") + geom_vline(xintercept = -thres.logFC, linetype= "dotted") +
-      geom_hline(yintercept = -log10(p.val), linetype= "dotted")  +  theme_bw() + ggtitle(title)
-    intp <- ggplotly(p, tooltip = "text")
-
-  }
-
-  if (geneLabel == "Geneid") { # if Geneid all ok, as it's the default coded variable
-    p <- p + geom_text_repel(data = head(dataV[dataV$sig != "n.s",],topGenes), aes(label = Geneid), max.overlaps = maxOverlaps)
-  } else { # if not, will need to map it to dataV and sort again the dataframe
+  if (geneLabel != "Geneid") { # if gene label is not Geneid then we will merge the annotation so it can be used
     if (!is.null(annotFile)) {
       dataV <- merge(annotFile[,c("Geneid",geneLabel)],dataV,by="Geneid")
       if (is.null(p.val)) {
@@ -107,11 +82,46 @@ makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtP
     } else {
       stop("Please, provide an annotation file with the specified 'geneLabel' and Geneid, using 'annotFile' parameter.\n")
     }
+  }
 
+  if (yVal == "p.adjust") {
+    ylim <- ylim(0,ceiling(max(dataV$minlogadjp)))
+    topData = head(dataV[dataV$sig != "n.s",],topGenes) # the genes that will be labeled in plot
+    p <- ggplot(data=dataV, aes(x=logFC, y=minlogadjp )) +
+      geom_point(alpha = 1, size= 1, aes(col = sig,
+                                         text= paste(dataV[,c(geneLabel)],
+                                                     "\nFC =", round(FC,3),
+                                                     "\nadj.pval =", formatC(adj.P.Val,format="e",digits=3)))) +
+      scale_color_manual(values = colorS) + xlim + ylim + labs(col=" ") +
+      geom_vline(xintercept = thres.logFC, linetype= "dotted") + geom_vline(xintercept = -thres.logFC, linetype= "dotted") +
+      geom_hline(yintercept = -log10(p.adj), linetype= "dotted")  +  theme_bw() + ggtitle(title)
+    # for interactive, expressions don't work
+    intp <- p + xlab("log2FC") + ylab("-log10(adj.pval)")
+    intp <- ggplotly(intp, tooltip = "text")
+    # but it does work with normal ggplot so we maintain the labs after
+    p <- p + xlab(expression("log"[2]*"FC")) + ylab(expression("-log"[10]*"(adj.pval)")) +
+      geom_text_repel(data = topData, aes(label = topData[,c(geneLabel)]), max.overlaps = maxOverlaps) # we hard label for only non-interactive plot
+
+  } else {
+    ylim <- ylim(0,ceiling(max(dataV$minlogp)))
     topData = head(dataV[dataV$sig != "n.s",],topGenes)
-    p <- p + geom_text_repel(data = topData, aes(label = topData[,c(geneLabel)]), max.overlaps = maxOverlaps)
+    p <- ggplot(data=dataV, aes(x=logFC, y=minlogp )) +
+      geom_point(alpha = 1, size= 1, aes(col = sig,
+                                         text= paste(dataV[,c(geneLabel)],
+                                                     "\nFC =", round(FC,3),
+                                                     "\np.val =", formatC(P.Value,format="e",digits=3)))) +
+      scale_color_manual(values = colorS) + xlim + ylim + labs(col=" ") +
+      geom_vline(xintercept = thres.logFC, linetype= "dotted") + geom_vline(xintercept = -thres.logFC, linetype= "dotted") +
+      geom_hline(yintercept = -log10(p.val), linetype= "dotted")  +  theme_bw() + ggtitle(title)
+    # for interactive, expressions don't work
+    intp <- p + xlab("log2FC") + ylab("-log10(p.val)")
+    intp <- ggplotly(intp, tooltip = "text")
+    # but it does work with normal ggplot so we maintain the labs after
+    p <- p + xlab(expression("log"[2]*"FC")) + ylab(expression("-log"[10]*"(p.val)")) +
+      geom_text_repel(data = topData, aes(label = topData[,c(geneLabel)]), max.overlaps = maxOverlaps)
 
   }
+
 
   if(fmtPlot != "") {
     ggsave(p, filename= file.path(resultsDir, paste(fileName, fmtPlot, sep = ".")), device = fmtPlot, ...)

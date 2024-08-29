@@ -54,7 +54,7 @@ makeVolcano(
 
 \item{annotFile}{Dataframe that includes the equivalence of Geneid and geneLabel, if geneLabel is specified. Default = NULL}
 
-\item{interactive}{Prints an interactive plot showing the gene ids when hovering the points. Currently only working when geneLabel is "Geneid" and in session (fmtPlot = "")}
+\item{interactive}{Prints an interactive plot showing the geneLabel, FC and (adj)p.value when hovering the points. Currently only working in session (fmtPlot = ""). Default = FALSE}
 
 \item{dataV}{data.frame as the output obtained through function topTable() in limma package}
 }
