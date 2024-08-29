@@ -30,7 +30,7 @@ makeVolcano(
 
 \item{fileName}{Name of the output file, without extension. Default = NULL}
 
-\item{fmtPlot}{Format for the image file, "png" or "pdf". If none specified ("") image will pop up in R session. Default = ""}
+\item{fmtPlot}{Format for the image file, "png" or "pdf" (static plot); or "html" (interactive). If none specified ("") image will pop up in R session. Default = ""}
 
 \item{title}{Title for each plot. Default = NULL}
 
@@ -54,7 +54,7 @@ makeVolcano(
 
 \item{annotFile}{Dataframe that includes the equivalence of Geneid and geneLabel, if geneLabel is specified. Default = NULL}
 
-\item{interactive}{Prints an interactive plot showing the geneLabel, FC and (adj)p.value when hovering the points. Currently only working in session (fmtPlot = ""). Default = FALSE}
+\item{interactive}{Prints an interactive plot showing the geneLabel, FC and (adj)p.value when hovering the points. Shows plot in session. For saving interactive plot, use fmtPlot="html". Default = FALSE}
 
 \item{dataV}{data.frame as the output obtained through function topTable() in limma package}
 }

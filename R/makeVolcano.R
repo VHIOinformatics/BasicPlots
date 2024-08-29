@@ -3,7 +3,7 @@
 #' @param dataV data.frame as the output obtained through function topTable() in limma package
 #' @param resultsDir Output directory. Default = volcanoDir
 #' @param fileName Name of the output file, without extension. Default = NULL
-#' @param fmtPlot Format for the image file, "png" or "pdf". If none specified ("") image will pop up in R session. Default = ""
+#' @param fmtPlot Format for the image file, "png" or "pdf" (static plot); or "html" (interactive). If none specified ("") image will pop up in R session. Default = ""
 #' @param scaleColors Vector with three colors to compose the color scale. Default = c("blue","grey","red")
 #' @param title Title for each plot. Default = NULL
 #' @param yVal Value to plot on the y axis. Possible values are p.value or p.adjust. Values will be transformed to minus(log2(yVal)). Default = p.adjust
@@ -15,7 +15,7 @@
 #' @param geneLabel Variable with the label of genes to be shown in plot. Default = Geneid
 #' @param sortLabel Sorting criteria for the label highlight, either "p-value" or "logFC". Will show in plot the labels of the top most significant or most different in absolute fold change, respectively. Default = p-value
 #' @param annotFile Dataframe that includes the equivalence of Geneid and geneLabel, if geneLabel is specified. Default = NULL
-#' @param interactive Prints an interactive plot showing the geneLabel, FC and (adj)p.value when hovering the points. Currently only working in session (fmtPlot = ""). Default = FALSE
+#' @param interactive Prints an interactive plot showing the geneLabel, FC and (adj)p.value when hovering the points. Shows plot in session. For saving interactive plot, use fmtPlot="html". Default = FALSE
 #'
 #' @return The plot is created in the "resultsDir" with the name "fileName" or in session if the format is not specified.
 
@@ -24,6 +24,7 @@
 #' @import ggplot2
 #' @import ggrepel
 #' @import plotly
+#' @import htmlwidgets
 
 makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtPlot = "", title = NULL, scaleColors = c("blue", "grey", "red"), yVal="p.adjust", p.val = NULL, p.adj = 0.05, thres.logFC=1, coefs=fit.main$coefficients ,topGenes = 20, maxOverlaps = 25, geneLabel = "Geneid", sortLabel="p-value", annotFile = NULL, interactive = FALSE, ...)
 {
@@ -123,8 +124,11 @@ makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtP
   }
 
 
-  if(fmtPlot != "") {
+  if(fmtPlot %in% c("png","pdf")) {
     ggsave(p, filename= file.path(resultsDir, paste(fileName, fmtPlot, sep = ".")), device = fmtPlot, ...)
+  } else if (fmtPlot == "html") {
+    htmlwidgets::saveWidget(as_widget(intp), file.path(resultsDir, paste(fileName, fmtPlot, sep = ".")))
+
   } else {
     if(interactive == TRUE) {
       print(intp)
