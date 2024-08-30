@@ -2,45 +2,52 @@
 % Please edit documentation in R/makePCA.R
 \name{makePCA}
 \alias{makePCA}
-\title{Creates a PCA 3D from a numerical matrix}
+\title{Creates a PCA from a counts matrix}
 \usage{
 makePCA(
-  estimates,
-  resultsDir = NULL,
-  fileName = NULL,
-  fmtPlot = "pdf",
+  counts,
+  targets,
+  PCs = NULL,
+  label = FALSE,
   title = NULL,
-  conditions = NULL,
+  color_condition = NULL,
+  shape_condition = NULL,
   colors = NULL,
-  dist = 2,
-  dim = 3,
-  legend.pos = "bottomright"
+  resultsDir = getwd(),
+  fileName = "PCAPlot",
+  fmtPlot = "",
+  interactive = FALSE,
+  ...
 )
 }
 \arguments{
-\item{legend.pos}{position of the legend. Default "bottomright"}
+\item{counts}{Numeric matrix with the count values to plot.}
 
-\item{estimates:}{Numeric matrix with the intensity values to plot.}
+\item{targets}{Dataframe including the metadata annotation of each sample and the variables of interest. Used to access the condition information to color.}
 
-\item{resultsDir:}{Output directory. Default = NULL}
+\item{PCs}{Principal components to plot. By default plots PC1 and PC2, but non-default PCs can be plotted if specified; e.g. c(2,3) will plot PC2 and PC3. Default = NULL}
 
-\item{fileName:}{name of the output file, without extension. Default = NULL}
+\item{label}{Whether to show the labels of the points of the PCA. Default = FALSE}
 
-\item{fmtPlot:}{Format for the image file, "png" or "pdf" (default). If none specified image will pop up in R session}
+\item{title}{Title for each plot. Default = NULL}
 
-\item{title:}{Title for each plot. Default = NULL}
+\item{color_condition}{Name of the variable in \code{targets} that includes the conditions to be used for coloring the PCA. Default = NULL}
 
-\item{conditions:}{Vector with the different conditions. Default = NULL}
+\item{shape_condition}{Name of the variable in \code{targets} that includes the conditions to be used for the shape of the PCA. Passing shape = FALSE makes plot without points. In this case, label is turned on unless otherwise specified. Default = NULL}
 
-\item{colors:}{Vector with the colors assigned to each condition (in order of the unique(conditions)). Default = NULL}
+\item{colors}{Vector with the colors assigned to each condition (in order of the unique(conditions)). Default = NULL}
 
-\item{dim:}{Dimensions of the PCA plot. Default = 3. Possible values are 2 or 3. Default = 3}
+\item{resultsDir}{Output directory. Default = current working directory (getwd())}
 
-\item{dist:}{Distance from labels to dots. Default = 2}
+\item{fileName}{Name of the output file, without extension. Default = "PCAPlot"}
+
+\item{fmtPlot}{Format for the image file, "png" or "pdf" (static plot); or "html" (interactive). If none specified image will pop up in R session. Default = ""}
+
+\item{interactive}{Creates a PCA plot that shows the label of each point as you hover over it. Must be TRUE to be saved as html. Can also show plot in session. Default = FALSE}
 }
 \value{
 PCA image
 }
 \description{
-Creates a PCA 3D from a numerical matrix
+Creates a PCA from a counts matrix
 }
