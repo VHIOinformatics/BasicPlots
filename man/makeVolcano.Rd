@@ -19,7 +19,7 @@ makeVolcano(
   topGenes = 20,
   maxOverlaps = 25,
   geneLabel = "Geneid",
-  sortLabel = "p-value",
+  sortLabel = "p.value",
   annotFile = NULL,
   interactive = FALSE,
   ...
@@ -50,7 +50,7 @@ makeVolcano(
 
 \item{geneLabel}{Variable with the label of genes to be shown in plot. Default = Geneid}
 
-\item{sortLabel}{Sorting criteria for the label highlight, either "p-value" or "logFC". Will show in plot the labels of the top most significant or most different in absolute fold change, respectively. Default = p-value}
+\item{sortLabel}{Sorting criteria for the label highlight. Specify "logFC" to plot the labels of the top most different genes in absolute fold change. Otherwise, plot will show the labels of the top most significant (according to previously defined cutoff). Default = p.value}
 
 \item{annotFile}{Dataframe that includes the equivalence of Geneid and geneLabel, if geneLabel is specified. Default = NULL}
 

@@ -13,7 +13,7 @@
 #' @param coefs Coefficients of fit.main results. Will be used for the limits of x in the volcano plot. Default = fit.main$coefficients
 #' @param topGenes Number of genes to label. Default = 20
 #' @param geneLabel Variable with the label of genes to be shown in plot. Default = Geneid
-#' @param sortLabel Sorting criteria for the label highlight, either "p-value" or "logFC". Will show in plot the labels of the top most significant or most different in absolute fold change, respectively. Default = p-value
+#' @param sortLabel Sorting criteria for the label highlight. Specify "logFC" to plot the labels of the top most different genes in absolute fold change. Otherwise, plot will show the labels of the top most significant (according to previously defined cutoff). Default = p.value
 #' @param annotFile Dataframe that includes the equivalence of Geneid and geneLabel, if geneLabel is specified. Default = NULL
 #' @param interactive Prints an interactive plot showing the geneLabel, FC and (adj)p.value when hovering the points. Shows plot in session. For saving interactive plot, use fmtPlot="html". Default = FALSE
 #'
@@ -26,7 +26,7 @@
 #' @import plotly
 #' @import htmlwidgets
 
-makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtPlot = "", title = NULL, scaleColors = c("blue", "grey", "red"), yVal="p.adjust", p.val = NULL, p.adj = 0.05, thres.logFC=1, coefs=fit.main$coefficients ,topGenes = 20, maxOverlaps = 25, geneLabel = "Geneid", sortLabel="p-value", annotFile = NULL, interactive = FALSE, ...)
+makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtPlot = "", title = NULL, scaleColors = c("blue", "grey", "red"), yVal="p.adjust", p.val = NULL, p.adj = 0.05, thres.logFC=1, coefs=fit.main$coefficients ,topGenes = 20, maxOverlaps = 25, geneLabel = "Geneid", sortLabel="p.value", annotFile = NULL, interactive = FALSE, ...)
 {
 
   colorS <- scaleColors
@@ -59,7 +59,7 @@ makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtP
       dataV$abslogFC <- abs(dataV$logFC)
       dataV <- dataV[order(dataV$abslogFC, decreasing = TRUE),] # sort by logFC
     } else {
-      dataV <- dataV[order(dataV$pval),] # order sorted by p.val
+      dataV <- dataV[order(dataV$P.Value),] # order sorted by p.val
     }
   }
 
