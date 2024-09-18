@@ -13,7 +13,7 @@
 #' @param scale Character indicating if the values should be centered and scaled. Values given by parameter scale of pheatmap function. Default = "row"
 #' @param annot Dataframe that specifies the annotations shown for columns. rownames of the data.frame must be the colnames of the matrix object. Default = NA
 #' @param annotColors List with as many elements as conditions. Each element must be a vector with the color assignment for each category of the condition. Default = NA (assigned internally)
-#' @param showRownames Indicates whether you want to show rownames or not. Each row defines the features for a specific row. A maximum of 150 genes is possible, if this number is exceeded the parameter will automatically be turned off. Default = TRUE
+#' @param showRowNames Indicates whether you want to show rownames or not. Each row defines the features for a specific row. A maximum of 150 genes is possible, if this number is exceeded the parameter will automatically be turned off. Default = TRUE
 #' @param fontSizeRows Size of row labels. Computed depending on the number of rows of matrix. Default = 10
 #' @param showRowCluster Whether to show the tree of the row clustering. Default = FALSE
 #' @param ... Additional parameters of pheatmap

@@ -51,13 +51,13 @@ makeHeatmap(
 
 \item{annotColors}{List with as many elements as conditions. Each element must be a vector with the color assignment for each category of the condition. Default = NA (assigned internally)}
 
+\item{showRowNames}{Indicates whether you want to show rownames or not. Each row defines the features for a specific row. A maximum of 150 genes is possible, if this number is exceeded the parameter will automatically be turned off. Default = TRUE}
+
 \item{fontSizeRows}{Size of row labels. Computed depending on the number of rows of matrix. Default = 10}
 
 \item{showRowCluster}{Whether to show the tree of the row clustering. Default = FALSE}
 
 \item{...}{Additional parameters of pheatmap}
-
-\item{showRownames}{Indicates whether you want to show rownames or not. Each row defines the features for a specific row. A maximum of 150 genes is possible, if this number is exceeded the parameter will automatically be turned off. Default = TRUE}
 }
 \value{
 The heatmap plot is created in the "resultsDir" with the name "fileName"
