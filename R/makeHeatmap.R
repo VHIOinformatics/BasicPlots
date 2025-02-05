@@ -6,8 +6,8 @@
 #' @param fmtPlot Format for the image file, "png" or "pdf". If none specified image will pop up in R session. Default = ""
 #' @param scaleColors Vector with three colors to compose the color scale. Default = c("blue","white","red")
 #' @param title Title of the plot. Default = ""
-#' @param clusterRow Whether to cluster rows. Equivalent to parameter cluster_row of pheatmap. Default = TRUE
-#' @param clusterCol Whether to cluster columns. Equivalent to parameter cluster_col of pheatmap. Default = TRUE
+#' @param clusterRow Whether to cluster rows, or hclust object. Equivalent to parameter cluster_row of pheatmap. Default = TRUE
+#' @param clusterCol Whether to cluster columns, or hclust object. Equivalent to parameter cluster_col of pheatmap. Default = TRUE
 #' @param clustMethod Clustering method. Default "ward.D2". Values given by parameter clustering_method of pheatmap function. Default = "ward.D2"
 #' @param clustDistCols Distance for clustering columns. Values given by parameter clustering_distance_cols of pheatmap function. Default = "correlation"
 #' @param scale Character indicating if the values should be centered and scaled. Values given by parameter scale of pheatmap function. Default = "row"

@@ -13,7 +13,8 @@ oneCluster(
   distance = "correlation",
   method = "ward.D2",
   conditions = NULL,
-  colors = NULL
+  colors = NULL,
+  ...
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ oneCluster(
 \item{conditions}{Vector with the different conditions. Default = NULL}
 
 \item{colors}{Vector with the colors assigned to each condition (in order of the unique(conditions)). Default = NULL}
+
+\item{...}{Other elements of plots. (e.g. "cex=2" with manage the size of the labels)}
 }
 \value{
 a pdf and/or png with the hierarchical cluster

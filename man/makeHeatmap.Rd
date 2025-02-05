@@ -37,9 +37,9 @@ makeHeatmap(
 
 \item{scaleColors}{Vector with three colors to compose the color scale. Default = c("blue","white","red")}
 
-\item{clusterRow}{Whether to cluster rows. Equivalent to parameter cluster_row of pheatmap. Default = TRUE}
+\item{clusterRow}{Whether to cluster rows, or hclust object. Equivalent to parameter cluster_row of pheatmap. Default = TRUE}
 
-\item{clusterCol}{Whether to cluster columns. Equivalent to parameter cluster_col of pheatmap. Default = TRUE}
+\item{clusterCol}{Whether to cluster columns, or hclust object. Equivalent to parameter cluster_col of pheatmap. Default = TRUE}
 
 \item{clustMethod}{Clustering method. Default "ward.D2". Values given by parameter clustering_method of pheatmap function. Default = "ward.D2"}
 

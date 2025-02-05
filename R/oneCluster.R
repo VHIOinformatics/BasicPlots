@@ -9,12 +9,13 @@
 #' @param method Linkage method to cluster samples. Values given by parameter method of hclust function. Default = "ward.D2"
 #' @param conditions Vector with the different conditions. Default = NULL
 #' @param colors Vector with the colors assigned to each condition (in order of the unique(conditions)). Default = NULL
+#' @param ... Other elements of plots. (e.g. "cex=2" with manage the size of the labels)
 #'
 #' @import RColorBrewer
 #' @return a pdf and/or png with the hierarchical cluster
 #' @export oneCluster
 
-oneCluster <-function(estimates, resultsDir = NULL, fileName = NULL, fmtPlot = "pdf", title = NULL, distance="correlation", method = "ward.D2", conditions = NULL, colors = NULL)
+oneCluster <-function(estimates, resultsDir = NULL, fileName = NULL, fmtPlot = "pdf", title = NULL, distance="correlation", method = "ward.D2", conditions = NULL, colors = NULL, ...)
 {
 
     labels <- colnames(estimates)
@@ -47,7 +48,7 @@ oneCluster <-function(estimates, resultsDir = NULL, fileName = NULL, fmtPlot = "
     if (is.null(conditions)) {
 
         opt<-par(cex.main=1, cex = parameters$ce, cex.axis = parameters$ce)
-          plot(clust, main=title, hang=-1, xlab=xlab, ylab="", sub = "")
+          plot(clust, main=title, hang=-1, xlab=xlab, ylab="", sub = "", ...)
         par(opt)
 
     } else {
