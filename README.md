@@ -20,7 +20,7 @@ install_github("VHIOinformatics/BasicPlots")
 
 * **manyClusters.R**: Creates a pdf with different dendrograms combining possible distances and linkage methods, to evaluate the most suited combination.
 
-* **oneCluster.R**: Creates a dendrogram (hierchical clustering) with distance and linkage method of choice.
+* **oneCluster.R**: Creates a dendrogram (hierarchical clustering) with distance and linkage method of choice.
 
 * **colorCluster.R**: Function used in `oneCluster` and `manyClusters` for colouring the dendrogram according to a vector of conditions.
 
