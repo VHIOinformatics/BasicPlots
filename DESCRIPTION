@@ -1,10 +1,10 @@
 Package: BasicPlots
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Basic plots for our daily RNA-seq analysis
+Version: 1.0.0
 Authors@R:
     person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+Description: This package was implemented with functions to automatize the main plots we use in our daily work for RNA-seq analyses.
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
 Encoding: UTF-8
@@ -12,7 +12,6 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
 Imports:
     RColorBrewer,
-    Vennerable,
     ggfortify,
     ggplot2,
     ggrepel,
@@ -23,5 +22,3 @@ Imports:
     pheatmap,
     plotly,
     scatterplot3d
-Remotes:
-    js229/Vennerable

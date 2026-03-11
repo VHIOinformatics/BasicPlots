@@ -7,9 +7,14 @@
 #' @param title Title for each plot. Default = NULL
 #' @param mkExcel Whether to generate an excel with gene intersection and specific sections. Default = TRUE
 #' @param colors Vector of colors to paint the different main conditions of the Venn diagram. Intersecting sections will be colored with color overlap. If none specified, pre-defined default colors will be used.
+#' @param labelSize Text size of the name label of each set. Equivalent to set_name_size from ggvenn. Default = 6
+#' @param setSize Text size for the set number contents. Equivalent to text_size from ggvenn. Default = 5
 #' @param percentage Whether to show the percentage of genes for each set. Default = FALSE
+#' @param wid Plot parameter: width of the device (in inches). Default = 8
+#' @param hei Plot parameter: height of the device (in inches). Default = 8
+#' @param res Plot parameter: nominal resolution in ppi. Default = 400
+#' @param ... Additional parameters to add to ggvenn function
 #'
-#' @import Vennerable
 #' @import ggplot2
 #' @import ggvenn
 #' @import openxlsx
@@ -18,57 +23,79 @@
 #' @export makeVenn
 
 makeVenn <-  function (listGenes, resultsDir = NULL, fileName = NULL, fmtPlot = "",
-                       title = NULL, mkExcel = TRUE, colors = NULL, percentage = FALSE)
+                       title = NULL, mkExcel = TRUE, colors = NULL, labelSize = 6, setSize = 5, percentage = FALSE, wid = 8, hei = 8, res = 400, ...)
 {
 
-  if (is.null(colors)) { #default colors
+  if (is.null(colors)) { # default colors (only 4 because more than 4 comparisons is not advised)
     colors=c("#c33c54","#254e70","#43aa8b","#ffc857")
   }
 
   nList <- length(listGenes)
-  vtest <- Venn(listGenes)
-  vennData <- sapply(vtest@IntersectionSets, function(x) length(unlist(x)))
+  if (nList > 4) {
+    stop("Cannot make a Venn diagram with more than 4 comparisons as it would be too complex to interpret.")
+  } else if (nList == 1) {
+    stop("Cannot make a Venn diagram with only one list as there is nothing to compare.")
+  }
 
-  # plot and save file
+  # create and plot ggvenn
   venn_plot <- ggvenn(
     data = listGenes,
     show_elements = FALSE,    # Optional: Set to TRUE if you want to display the elements
     fill_color = colors,  # Custom colors if desired
     stroke_size = 0.5,
-    set_name_size = 6,
-    text_size = 5,
-    show_percentage = percentage   # Optional: Set to TRUE to show percentages in intersections
-  )
+    set_name_size = labelSize,
+    text_size = setSize,
+    show_percentage = percentage,   # Optional: Set to TRUE to show percentages in intersections
+    ...
+    )
 
+  # extract data from ggvenn object
+  venn_df <- as.data.frame(venn_plot@data)
+  rownames(venn_df) <- venn_df$`_key`
+  venn_df <- venn_df[,-1]
+  # we have a table of whether each gene is in one comparison or the other (TRUE/FALSE)
+  venn_df$pattern <- apply(venn_df, 1, function(x) {
+    paste(as.numeric(x), collapse = "")
+  }) # we assign a value of the pattern (00 in neither, 01 in second but not first, 10 in first but not second, 11 in both)
+  #table(venn_df$pattern)
+  intersectionSets <- split(rownames(venn_df), venn_df$pattern) # we get a list of the genes for each pattern
+
+  # save file
   if (fmtPlot %in% c("png", "pdf")) {
-    ggsave(venn_plot, filename= file.path(resultsDir, paste("VennDiagram",fileName, fmtPlot, sep = ".")), device = fmtPlot, bg="white", width=8, height=8, units="in")
+    ggsave(filename = file.path(resultsDir, paste("VennDiagram", fileName, fmtPlot, sep = ".")),
+           plot = venn_plot,
+           device = fmtPlot,
+           bg = "white",
+           width = wid,
+           height = hei,
+           units = "in")
   } else {
     print(venn_plot)
   }
 
 
-if (mkExcel) {
+  # make excel with genes
+  if (mkExcel) {
     hs1 <- createStyle(fgFill = "#737373", halign = "CENTER", textDecoration = "Bold",
                        border = "Bottom", fontColour = "white")
     wb <- createWorkbook()
 
-    nSheets = length(vtest@IntersectionSets)
+    nSheets = length(intersectionSets)
 
-    for (i in 2:(nSheets-1)){
-    nameVector <- names(listGenes)[as.logical(as.numeric(unlist(strsplit(names(vtest@IntersectionSets[i]),
-                                                                         split = ""))))]
-    nameSheet <- paste(nameVector, collapse = ".")
+    for (i in 1:(nSheets-1)){ # started from 2 before bc 00 was included, but not now. nSheets-1 keeps from adding the common 11, which is added later
+      nameVector <- names(listGenes)[as.logical(as.numeric(unlist(strsplit(names(intersectionSets[i]), split = ""))))]
+      nameSheet <- paste(nameVector, collapse = ".")
 
-    addWorksheet(wb, sheetName =  nameSheet)
+      addWorksheet(wb, sheetName = nameSheet)
 
-    writeData(wb, unlist(vtest@IntersectionSets[[i]]),
-              sheet =  nameSheet, startRow = 1, startCol = 1,
-              headerStyle = hs1)
+      writeData(wb, unlist(intersectionSets[[i]]),
+                sheet = nameSheet, startRow = 1, startCol = 1,
+                headerStyle = hs1)
     }
-    #intersection
+    # intersection
     addWorksheet(wb, sheetName = "Common")
 
-    writeData(wb, unlist(vtest@IntersectionSets[[nSheets]]),
+    writeData(wb, unlist(intersectionSets[[nSheets]]),
               sheet = "Common", startRow = 1, startCol = 1,
               headerStyle = hs1)
 

@@ -10,12 +10,15 @@
 #' @param p.val P-value cutoff for topTable. Default = NULL
 #' @param p.adj Adjusted p-value cutoff for topTable. Default = 0.05
 #' @param thres.logFC LogFC cutoff for topTable. Default = 1
-#' @param coefs Coefficients of fit.main results. Will be used for the limits of x in the volcano plot. Default = fit.main$coefficients
+#' @param coefs Coefficients of fit.main results. Will be used for the limits of x in the volcano plot. Is is adviced to use "fit.main$coefficients" to consider all conditions, but if none provided it will get the logFC for the max limits. Default = NULL
 #' @param topGenes Number of genes to label. Default = 20
 #' @param geneLabel Variable with the label of genes to be shown in plot. Default = Geneid
 #' @param sortLabel Sorting criteria for the label highlight. Specify "logFC" to plot the labels of the top most different genes in absolute fold change. Otherwise, plot will show the labels of the top most significant (according to previously defined cutoff). Default = p.value
 #' @param annotFile Dataframe that includes the equivalence of Geneid and geneLabel, if geneLabel is specified. Default = NULL
 #' @param interactive Prints an interactive plot showing the geneLabel, FC and (adj)p.value when hovering the points. Shows plot in session. For saving interactive plot, use fmtPlot="html". Default = FALSE
+#' @param wid Plot parameter: width of the device (in inches). Default = 8
+#' @param hei Plot parameter: height of the device (in inches). Default = 6
+#' @param res Plot parameter: nominal resolution in ppi. Default = 400
 #'
 #' @return The plot is created in the "resultsDir" with the name "fileName" or in session if the format is not specified.
 
@@ -26,10 +29,15 @@
 #' @import plotly
 #' @import htmlwidgets
 
-makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtPlot = "", title = NULL, scaleColors = c("blue", "grey", "red"), yVal="p.adjust", p.val = NULL, p.adj = 0.05, thres.logFC=1, coefs=fit.main$coefficients ,topGenes = 20, maxOverlaps = 25, geneLabel = "Geneid", sortLabel="p.value", annotFile = NULL, interactive = FALSE, ...)
+makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtPlot = "", title = NULL, scaleColors = c("blue", "grey", "red"), yVal = "p.adjust", p.val = NULL, p.adj = 0.05, thres.logFC = 1, coefs = NULL, topGenes = 20, maxOverlaps = 25, geneLabel = "Geneid", sortLabel = "p.value", annotFile = NULL, interactive = FALSE, wid = 8, hei = 8, res = 400)
 {
 
   colorS <- scaleColors
+  names(colorS) <- c("DN","n.s","UP")
+
+  if(is.null(coefs)) { # if no coefs provided, will get the logFC from the topTable provided
+    coefs <- topTable$logFC
+  }
 
   maxxlim <- max(abs(coefs))
   xlim <- xlim(-ceiling(maxxlim),ceiling(maxxlim))
@@ -37,11 +45,18 @@ makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtP
 
   #topTable <- topTable(fit.main.CAF, n = Inf, coef = i, adjust = "fdr")
   dataV <- topTable
-  dataV <- dataV %>% mutate(Geneid = rownames(dataV), minlogp = -(log10(P.Value)), minlogadjp = -(log10(adj.P.Val)), FC = ifelse(logFC>0, 2^logFC, -(2^abs(logFC))))
+  dataV <- dataV %>% mutate(Geneid = rownames(dataV),
+                            minlogp = -(log10(P.Value)),
+                            minlogadjp = -(log10(adj.P.Val)),
+                            FC = ifelse(logFC > 0, 2^logFC, -(2^abs(logFC))))
 
   if(is.null(p.val)) { # if p.value is null we use p.adjust as significance threshold
     dataV <- dataV %>%
-    mutate(sig = ifelse(adj.P.Val<p.adj & logFC > thres.logFC, "UP", ifelse(adj.P.Val<p.adj & logFC < (-thres.logFC), "DN","n.s")))
+    mutate(sig = ifelse(adj.P.Val < p.adj & logFC > thres.logFC,
+                        "UP",
+                        ifelse(adj.P.Val < p.adj & logFC < (-thres.logFC),
+                               "DN",
+                               "n.s")))
 
     if (sortLabel == "logFC") {
       dataV$abslogFC <- abs(dataV$logFC)
@@ -52,7 +67,11 @@ makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtP
 
   } else { # if p.value is not null, we use p.value as threshold
     dataV <- dataV %>%
-      mutate(sig = ifelse(P.Value<p.val & logFC > thres.logFC, "UP", ifelse(P.Value<p.val & logFC < (-thres.logFC), "DN","n.s")))
+      mutate(sig = ifelse(P.Value < p.val & logFC > thres.logFC,
+                          "UP",
+                          ifelse(P.Value<p.val & logFC < (-thres.logFC),
+                                 "DN",
+                                 "n.s")))
 
 
     if (sortLabel == "logFC") {
@@ -65,7 +84,7 @@ makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtP
 
   if (geneLabel != "Geneid") { # if gene label is not Geneid then we will merge the annotation so it can be used
     if (!is.null(annotFile)) {
-      dataV <- merge(annotFile[,c("Geneid",geneLabel)],dataV,by="Geneid")
+      dataV <- merge(annotFile[,c("Geneid", geneLabel)], dataV, by="Geneid")
       if (is.null(p.val)) {
         if (sortLabel == "logFC") {
           dataV <- dataV[order(dataV$abslogFC, decreasing = TRUE),]
@@ -86,16 +105,16 @@ makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtP
   }
 
   if (yVal == "p.adjust") {
-    ylim <- ylim(0,ceiling(max(dataV$minlogadjp)))
-    topData = head(dataV[dataV$sig != "n.s",],topGenes) # the genes that will be labeled in plot
-    p <- ggplot(data=dataV, aes(x=logFC, y=minlogadjp )) +
+    ylim <- ylim(0, ceiling(max(dataV$minlogadjp)))
+    topData = head(dataV[dataV$sig != "n.s",], topGenes) # the genes that will be labeled in plot
+    p <- ggplot(data = dataV, aes(x = logFC, y = minlogadjp )) +
       geom_point(alpha = 1, size= 1, aes(col = sig,
-                                         text= paste(dataV[,c(geneLabel)],
+                                         text = paste(dataV[,c(geneLabel)],
                                                      "\nFC =", round(FC,3),
-                                                     "\nadj.pval =", formatC(adj.P.Val,format="e",digits=3)))) +
-      scale_color_manual(values = colorS) + xlim + ylim + labs(col=" ") +
-      geom_vline(xintercept = thres.logFC, linetype= "dotted") + geom_vline(xintercept = -thres.logFC, linetype= "dotted") +
-      geom_hline(yintercept = -log10(p.adj), linetype= "dotted")  +  theme_bw() + ggtitle(title)
+                                                     "\nadj.pval =", formatC(adj.P.Val,format="e", digits=3)))) +
+      scale_color_manual(values = colorS) + xlim + ylim + labs(col = " ") +
+      geom_vline(xintercept = thres.logFC, linetype = "dotted") + geom_vline(xintercept = -thres.logFC, linetype = "dotted") +
+      geom_hline(yintercept = -log10(p.adj), linetype = "dotted") + theme_bw() + ggtitle(title)
     # for interactive, expressions don't work
     intp <- p + xlab("log2FC") + ylab("-log10(adj.pval)")
     intp <- ggplotly(intp, tooltip = "text")
@@ -104,13 +123,13 @@ makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtP
       geom_text_repel(data = topData, aes(label = topData[,c(geneLabel)]), max.overlaps = maxOverlaps) # we hard label for only non-interactive plot
 
   } else {
-    ylim <- ylim(0,ceiling(max(dataV$minlogp)))
-    topData = head(dataV[dataV$sig != "n.s",],topGenes)
-    p <- ggplot(data=dataV, aes(x=logFC, y=minlogp )) +
-      geom_point(alpha = 1, size= 1, aes(col = sig,
-                                         text= paste(dataV[,c(geneLabel)],
+    ylim <- ylim(0, ceiling(max(dataV$minlogp)))
+    topData = head(dataV[dataV$sig != "n.s",], topGenes)
+    p <- ggplot(data = dataV, aes(x = logFC, y = minlogp )) +
+      geom_point(alpha = 1, size = 1, aes(col = sig,
+                                         text = paste(dataV[,c(geneLabel)],
                                                      "\nFC =", round(FC,3),
-                                                     "\np.val =", formatC(P.Value,format="e",digits=3)))) +
+                                                     "\np.val =", formatC(P.Value, format="e", digits=3)))) +
       scale_color_manual(values = colorS) + xlim + ylim + labs(col=" ") +
       geom_vline(xintercept = thres.logFC, linetype= "dotted") + geom_vline(xintercept = -thres.logFC, linetype= "dotted") +
       geom_hline(yintercept = -log10(p.val), linetype= "dotted")  +  theme_bw() + ggtitle(title)
@@ -119,13 +138,13 @@ makeVolcano <- function(topTable, resultsDir = volcanoDir, fileName = NULL, fmtP
     intp <- ggplotly(intp, tooltip = "text")
     # but it does work with normal ggplot so we maintain the labs after
     p <- p + xlab(expression("log"[2]*"FC")) + ylab(expression("-log"[10]*"(p.val)")) +
-      geom_text_repel(data = topData, aes(label = topData[,c(geneLabel)]), max.overlaps = maxOverlaps)
+      geom_text_repel(data = topData, aes(label = topData[ ,c(geneLabel)]), max.overlaps = maxOverlaps)
 
   }
 
 
   if(fmtPlot %in% c("png","pdf")) {
-    ggsave(p, filename= file.path(resultsDir, paste(fileName, fmtPlot, sep = ".")), device = fmtPlot, ...)
+    ggsave(filename = file.path(resultsDir, paste(fileName, fmtPlot, sep = ".")), plot = p, device = fmtPlot, width = wid, height = hei, dpi = res)
   } else if (fmtPlot == "html") {
     htmlwidgets::saveWidget(as_widget(intp), file.path(resultsDir, paste(fileName, fmtPlot, sep = ".")))
 

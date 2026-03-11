@@ -18,11 +18,7 @@ install_github("VHIOinformatics/BasicPlots")
 
 * **makeVenn.R**: Creates a Venn diagram from a list of named lists of genes to compare. Allows from 2 to 4 way-comparison.
 
-* **manyClusters.R**: Creates a pdf with different dendrograms combining possible distances and linkage methods, to evaluate the most suited combination.
-
-* **oneCluster.R**: Creates a dendrogram (hierarchical clustering) with distance and linkage method of choice.
-
-* **colorCluster.R**: Function used in `oneCluster` and `manyClusters` for colouring the dendrogram according to a vector of conditions.
+* **makeCluster.R**: Includes three different functions for making dendrograms (hierarchical clustering): `manyClusters`, which creates a pdf with different dendrograms combining possible distances and linkage methods, to evaluate the most suited combination; `oneCluster`, which creates one dendrogram with distance and linkage method of choice; and `colorCluster`, used in the previous two for colouring the dendrogram accord to a vector of conditions. 
 
 * **setParameters.R**: Function to define different parameters of graphics. Used in other functions.
 
