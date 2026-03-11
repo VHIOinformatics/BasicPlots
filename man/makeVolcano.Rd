@@ -15,14 +15,16 @@ makeVolcano(
   p.val = NULL,
   p.adj = 0.05,
   thres.logFC = 1,
-  coefs = fit.main$coefficients,
+  coefs = NULL,
   topGenes = 20,
   maxOverlaps = 25,
   geneLabel = "Geneid",
   sortLabel = "p.value",
   annotFile = NULL,
   interactive = FALSE,
-  ...
+  wid = 8,
+  hei = 8,
+  res = 400
 )
 }
 \arguments{
@@ -44,7 +46,7 @@ makeVolcano(
 
 \item{thres.logFC}{LogFC cutoff for topTable. Default = 1}
 
-\item{coefs}{Coefficients of fit.main results. Will be used for the limits of x in the volcano plot. Default = fit.main$coefficients}
+\item{coefs}{Coefficients of fit.main results. Will be used for the limits of x in the volcano plot. Is is adviced to use "fit.main$coefficients" to consider all conditions, but if none provided it will get the logFC for the max limits. Default = NULL}
 
 \item{topGenes}{Number of genes to label. Default = 20}
 
@@ -55,6 +57,12 @@ makeVolcano(
 \item{annotFile}{Dataframe that includes the equivalence of Geneid and geneLabel, if geneLabel is specified. Default = NULL}
 
 \item{interactive}{Prints an interactive plot showing the geneLabel, FC and (adj)p.value when hovering the points. Shows plot in session. For saving interactive plot, use fmtPlot="html". Default = FALSE}
+
+\item{wid}{Plot parameter: width of the device (in inches). Default = 8}
+
+\item{hei}{Plot parameter: height of the device (in inches). Default = 6}
+
+\item{res}{Plot parameter: nominal resolution in ppi. Default = 400}
 
 \item{dataV}{data.frame as the output obtained through function topTable() in limma package}
 }

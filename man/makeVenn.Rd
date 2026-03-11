@@ -12,7 +12,13 @@ makeVenn(
   title = NULL,
   mkExcel = TRUE,
   colors = NULL,
-  percentage = FALSE
+  labelSize = 6,
+  setSize = 5,
+  percentage = FALSE,
+  wid = 8,
+  hei = 8,
+  res = 400,
+  ...
 )
 }
 \arguments{
@@ -30,7 +36,19 @@ makeVenn(
 
 \item{colors}{Vector of colors to paint the different main conditions of the Venn diagram. Intersecting sections will be colored with color overlap. If none specified, pre-defined default colors will be used.}
 
+\item{labelSize}{Text size of the name label of each set. Equivalent to set_name_size from ggvenn. Default = 6}
+
+\item{setSize}{Text size for the set number contents. Equivalent to text_size from ggvenn. Default = 5}
+
 \item{percentage}{Whether to show the percentage of genes for each set. Default = FALSE}
+
+\item{wid}{Plot parameter: width of the device (in inches). Default = 8}
+
+\item{hei}{Plot parameter: height of the device (in inches). Default = 8}
+
+\item{res}{Plot parameter: nominal resolution in ppi. Default = 400}
+
+\item{...}{Additional parameters to add to ggvenn function}
 }
 \value{
 Venn diagram plot and list of genes in each set (in excel format) if specified

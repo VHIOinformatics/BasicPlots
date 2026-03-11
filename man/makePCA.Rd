@@ -17,6 +17,9 @@ makePCA(
   fileName = "PCAPlot",
   fmtPlot = "",
   interactive = FALSE,
+  wid = 8,
+  hei = 6,
+  res = 400,
   ...
 )
 }
@@ -44,6 +47,14 @@ makePCA(
 \item{fmtPlot}{Format for the image file, "png" or "pdf" (static plot); or "html" (interactive). If none specified image will pop up in R session. Default = ""}
 
 \item{interactive}{Creates a PCA plot that shows the label of each point as you hover over it. Must be TRUE to be saved as html. Can also show plot in session. Default = FALSE}
+
+\item{wid}{Plot parameter: width of the device (in inches). Default = 8}
+
+\item{hei}{Plot parameter: height of the device (in inches). Default = 6}
+
+\item{res}{Plot parameter: nominal resolution in ppi. Default = 400}
+
+\item{...}{Additional parameters to be added to autoplot}
 }
 \value{
 PCA image

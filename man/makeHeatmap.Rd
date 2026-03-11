@@ -21,6 +21,10 @@ makeHeatmap(
   showRowNames = TRUE,
   fontSizeRows = 10,
   showRowCluster = FALSE,
+  showColCluster = TRUE,
+  wid = NULL,
+  hei = NULL,
+  res = NULL,
   ...
 )
 }
@@ -55,7 +59,15 @@ makeHeatmap(
 
 \item{fontSizeRows}{Size of row labels. Computed depending on the number of rows of matrix. Default = 10}
 
-\item{showRowCluster}{Whether to show the tree of the row clustering. Default = FALSE}
+\item{showRowCluster}{Whether to show the tree of the row clustering (genes). Default = FALSE}
+
+\item{showColCluster}{Whether to show the tree of the column clustering (samples). Default = TRUE}
+
+\item{wid}{Plot parameter: width of the device (in pixels). Internal default (3500) will be used if not specified. Default = NULL}
+
+\item{hei}{Plot parameter: height of the device (in pixels). Internal default (3500) will be used if not specified. Default = NULL}
+
+\item{res}{Plot parameter: nominal resolution in ppi. Internal default (400) will be used if not specified. Default = NULL}
 
 \item{...}{Additional parameters of pheatmap}
 }
