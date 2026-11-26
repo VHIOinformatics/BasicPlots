@@ -82,7 +82,7 @@ makeHeatmap <- function(matrix, resultsDir = NULL, fileName = NULL, fmtPlot = ""
     treeheightCol = 0
   }
 
-  if (is.na(annotColors)) { # if colors not provided use our palette
+  if (identical(annotColors, NA)) { # if colors not provided use our palette
 
     custom_palette = c("#288A6C", "#CF7937", "#8682BB", "#BB4F86", "#E3BC51","#8CB369", "#A6CEE3","#F1AEAD", "#7C7B7B","#1F78B4", "#D8BFD8", "#854849" ,"#5D7344","#10438B", "#FDBF6F", "#61A175", "#BB4042", "#F18684", "#5C3F7C", "#D0A376", "#EDED90","#B2DF8A")
 
