@@ -39,9 +39,9 @@ manyClusters(
 
 \item{colors}{Vector with the colors assigned to each condition. Default = NULL}
 
-\item{wid}{Plot parameter: width of the device (in pixels). Internal default (3500) will be used if not specified. Default = NULL}
+\item{wid}{Plot parameter: width of the device (in pixels). Will be estimated from the number of samples if not specified. Default = NULL}
 
-\item{hei}{Plot parameter: height of the device (in pixels). Internal default (3500) will be used if not specified. Default = NULL}
+\item{hei}{Plot parameter: height of the device (in pixels). Will be estimated from the label length if not specified. Default = NULL}
 
 \item{res}{Plot parameter: nominal resolution in ppi. Internal default (400) will be used if not specified. Default = NULL}
 

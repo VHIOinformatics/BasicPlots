@@ -4,14 +4,24 @@
 \alias{setParameters}
 \title{Estimates the parameters for the different graphics}
 \usage{
-setParameters(labels)
+setParameters(labels, base_ce = 0.8, tree_in = 5, min_in = 7, max_in = 30)
 }
 \arguments{
 \item{labels}{Vector with the sample names}
+
+\item{base_ce}{Preferred character expansion for the labels. Default = 0.8}
+
+\item{tree_in}{Height (inches) reserved for the tree itself. Default = 5}
+
+\item{min_in}{Minimum page width (inches). Default = 7}
+
+\item{max_in}{Maximum page width (inches); above this the font is reduced. Default = 30}
 }
 \value{
 a list of the parameters needed to perform graphics
 }
 \description{
-Estimates the parameters for the different graphics
+The font size is kept readable and the page grows with the number of samples
+(and with the length of the labels), instead of shrinking the text on a fixed
+size canvas. Only if the page reaches max_in the font size is reduced.
 }
